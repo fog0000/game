@@ -82,7 +82,6 @@ class Ball(Basic):
          if self.rect.top <= 0:
             self.dir = -self.dir
     
-    def alive(self):
-        # ============================================
-        # TODO: Implement a service that returns whether the ball is alive or not
-        pass
+    def alive(self) -> bool:
+         screen_height = config.display_dimension[1]
+         return self.rect.bottom < screen_height
