@@ -54,6 +54,15 @@ paddle_long_time = 5
 paddle_long_color = (0, 126, 255)
 
 colors = [(255, 0, 0), (255, 165, 0), (255, 255, 0)]
+
+red_item_color = (255, 0, 0)  # 빨간색
+blue_item_color = (0, 0, 255)  # 파란색
+
+# 기타 아이템 설정
+drop_probability = 0.2  # 아이템이 떨어질 확률
+item_speed = 10         # 아이템이 떨어지는 속도
+item_size = (15, 15)    # 아이템의 크기
+
 collision_limit = len(colors) - 1
 
 # Total number of life.

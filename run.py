@@ -63,11 +63,19 @@ def tick():
             ball.rect.centerx = paddle.rect.centerx
             ball.rect.bottom = paddle.rect.top
 
-        ball.collide_block(BLOCKS)
+        ball.collide_block(BLOCKS, ITEMS)   # ITEMS 전달 추가
         ball.collide_paddle(paddle)
         ball.hit_wall()
         if ball.alive() == False:
             BALLS.remove(ball)
+
+     # 아이템 처리
+    for item in ITEMS[:]:                  
+        item.move()                                          # 아이템 이동
+        if item.rect.colliderect(paddle.rect):               # Paddle과 충돌
+            ITEMS.remove(item)                               # Paddle에 닿으면 아이템 제거
+        elif item.rect.top > config.display_dimension[1]:    # 화면 아래로 사라지면
+            ITEMS.remove(item)
 
 
 def main():
@@ -90,6 +98,10 @@ def main():
 
         for block in BLOCKS:
             block.draw(surface)
+
+         # 아이템 그리기
+        for item in ITEMS:
+            item.draw(surface)
 
         cur_score = config.num_blocks[0] * config.num_blocks[1] - len(BLOCKS)
 

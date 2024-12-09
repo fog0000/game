@@ -24,8 +24,19 @@ class Basic:
         self.center = (self.rect.centerx, self.rect.centery)
 
 
+class Item(Basic):  # item 클래스 추가
+    def __init__(self, color: tuple, pos: tuple):
+        super().__init__(color, config.item_speed, pos, config.item_size)
+
+    def draw(self, surface):
+        pygame.draw.ellipse(surface, self.color, self.rect)
+
+    def move(self):
+        super().move()  # 아래로 떨어지도록 이동
+
+
 class Block(Basic):
-    def __init__(self, color: tuple, pos: tuple = (0,0), alive = True):
+    def __init__(self, color: tuple, pos: tuple = (0, 0), alive=True):
         super().__init__(color, 0, pos, config.block_size)
         self.pos = pos
         self.alive = alive
@@ -35,7 +46,16 @@ class Block(Basic):
             pygame.draw.rect(surface, self.color, self.rect)
     
     def collide(self) -> None:
-        self.alive = False   
+        self.alive = False  
+    
+    def drop_item(self, items: list):    # 추가: 아이템 생성 메서드
+        if random.random() <= config.drop_probability:       # config.py에서 확률을 가져와 아이템 생성
+            item_pos = (self.rect.centerx, self.rect.centery)
+
+            # 랜덤으로 빨간 공 또는 파란 공 생성
+            item_color = random.choice([config.red_item_color, config.blue_item_color])
+            new_item = Item(item_color, item_pos)
+            items.append(new_item)
 
 
 class Paddle(Basic):
@@ -64,24 +84,25 @@ class Ball(Basic):
     def draw(self, surface):
         pygame.draw.ellipse(surface, self.color, self.rect)
 
-    def collide_block(self, blocks: list):
+    def collide_block(self, blocks: list, items: list):  # item 리스트 추가
         for block in blocks:
             if block.alive and self.rect.colliderect(block.rect):
                 block.collide()
+                block.drop_item(items)  # 블록 깨질 때 아이템 생성 시도
+                self.dir = 360 - self.dir
 
     def collide_paddle(self, paddle: Paddle) -> None:
         if self.rect.colliderect(paddle.rect):
             self.dir = 360 - self.dir + random.randint(-5, 5)
 
     def hit_wall(self):
-         screen_width, screen_height = config.display_dimension
+        screen_width, screen_height = config.display_dimension
         # 좌우 벽 충돌
-         if self.rect.left <= 0 or self.rect.right >= screen_width:
-            self.dir = 180 -self.dir
+        if self.rect.left <= 0 or self.rect.right >= screen_width:
+            self.dir = 180 - self.dir
         # 상단 벽 충돌
-         if self.rect.top <= 0:
+        if self.rect.top <= 0:
             self.dir = -self.dir
     
     def alive(self) -> bool:
-         screen_height = config.display_dimension[1]
-         return self.rect.bottom < screen_height
+        return self.rect.bottom < config.display_dimension[1]
