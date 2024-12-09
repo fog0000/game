@@ -31,7 +31,7 @@ paddle_speed = 5
 
 # Setting for ball
 ball_color = (242, 242, 0)
-ball_speed = display_dimension[1] / 80
+ball_speed = display_dimension[1] / 60
 ball_pos = (center_x, paddle_pos[1] - paddle_size[1])
 ball_fever_color = (255, 50, 0)
 ball_size = (20, 20)

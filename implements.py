@@ -78,6 +78,7 @@ class Ball(Basic):
         super().__init__(config.ball_color, config.ball_speed, pos, config.ball_size)
         self.power = 1
         self.dir = 90 + random.randint(-45, 45)
+        self.start = False  # 공 발사 여부를 체크
 
     def draw(self, surface):
         pygame.draw.ellipse(surface, self.color, self.rect)
